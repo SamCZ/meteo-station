@@ -46,6 +46,8 @@ void print(const char* str) {
   u8g2.sendBuffer();
 
   meteo.Begin();
+
+  Serial.println(str);
 }
 
 void setupWifi();
@@ -162,6 +164,10 @@ void updateWifi() {
   u8g2.drawBox(126, 28, 127, 29);
 }
 
+int celsiumToFahrenheit(float celsium) {
+  return (int)round(1.8 * celsium + 32);
+}
+
 void loop() 
 {
   u8g2.clearBuffer();
@@ -186,7 +192,11 @@ void loop()
     if(lastThingSpeakUpdateTime == 0 || difference > (UpdateInMinutes * 1000 * 60)) {
       lastThingSpeakUpdateTime = nowTime;
 
-      
+      uint8_t message[2];
+      message[0] = (uint8_t) celsiumToFahrenheit(meteo.GetTemperature());
+      message[1] = (uint8_t) meteo.GetHumidity();
+
+      lastStatusMessage = sigFox.sendMessage(message, 2);
     }
 
     int size = map(difference, 0, UpdateInMinutes * 1000 * 60, 0, 128);

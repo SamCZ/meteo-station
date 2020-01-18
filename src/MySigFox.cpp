@@ -1,6 +1,6 @@
 #include "MySigfox.h"
 
-SigFox::SigFox(int8_t rxPin, int8_t txPin = -1) : m_rxPin(rxPin), m_txPin(txPin) {
+SigFox::SigFox(int8_t rxPin, int8_t txPin) : m_rxPin(rxPin), m_txPin(txPin) {
     _SoftSerial = new SoftwareSerial(rxPin, txPin);
 }
 
